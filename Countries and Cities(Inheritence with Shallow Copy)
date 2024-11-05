@@ -1,0 +1,121 @@
+#include <iostream>
+using namespace std;
+
+class countries{
+    public:
+    string *cnameptr;
+    double *careaptr;
+    string *capitalptr;
+    
+    countries(string name, double area, string capital){
+        cnameptr = new string;
+        *cnameptr = name;
+        careaptr = new double;
+        *careaptr = area;
+        capitalptr = new string;
+        *capitalptr = capital;
+        cout<<"Parent's parameterized constructor called"<<endl;
+    }
+    
+    countries(countries &obj){
+        cnameptr = new string;
+        this->cnameptr = obj.cnameptr;
+        careaptr = new double;
+        this->careaptr = obj.careaptr;
+        capitalptr = new string;
+        this->capitalptr = obj.capitalptr;
+        cout<<"Parent's copy constrictor called"<<endl;
+    }
+    
+    ~countries(){
+        cout<<"Parent's destructor called"<<endl;
+    }
+};
+
+class cities : public countries{
+    public:
+      string *citynameptr;
+      double *cityareaptr;
+      
+      cities(string cname, double carea, string capital, string cityname, double cityarea) : countries(cname, carea, capital){
+          citynameptr = new string;
+          *citynameptr = cityname;
+          cityareaptr = new double;
+          *cityareaptr = cityarea;
+          cout<<"Child's parameterized constructor called"<<endl;
+      }
+      
+      cities(cities &obj) : countries(obj){
+          citynameptr = new string;
+          this->citynameptr = obj.citynameptr;
+          cityareaptr = new double;
+          this->cityareaptr = obj.cityareaptr;
+          cout<<"Child's copy constructor called"<<endl;
+      }
+      
+      ~cities(){
+          cout<<"Child's destructor called"<<endl;
+      }
+      
+      void getInfo(){
+          cout<<"The name of the the country is "<<*cnameptr<<endl;
+          cout<<"The area of "<<*cnameptr<<" is "<<*careaptr<<" km^2"<<endl;
+          cout<<"The capital of "<<*cnameptr<<" is "<<*capitalptr<<endl;
+          cout<<"The city of "<<*cnameptr<<" being mentioned here is "<<*citynameptr<<endl;
+          cout<<"The area of "<<*citynameptr<<" is "<<*cityareaptr<<" km^2"<<endl;
+          cout<<endl;
+      }
+};
+
+class building : public cities{
+    public:
+    string *bnameptr;
+    
+    building(string cname, double carea, string capital, string cityname, double cityarea, string bname) : cities(cname, carea, capital, cityname, cityarea){
+        bnameptr = new string;
+        *bnameptr = bname;
+        cout<<"Grandchild's constructor called"<<endl;
+    }
+    
+    building(building &obj) : cities(obj) {
+        bnameptr = new string;
+        this->bnameptr = obj.bnameptr;
+        cout<<"Grandchild's copy constructor called"<<endl;
+    }
+    
+    ~building(){
+        cout<<"Grandchild's destructor called"<<endl;
+    }
+    
+     void getInfo(){
+          cout<<"The name of the the country is "<<*cnameptr<<endl;
+          cout<<"The area of "<<*cnameptr<<" is "<<*careaptr<<" km^2"<<endl;
+          cout<<"The capital of "<<*cnameptr<<" is "<<*capitalptr<<endl;
+          cout<<"The city of "<<*cnameptr<<" being mentioned here is "<<*citynameptr<<endl;
+          cout<<"The area of "<<*citynameptr<<" is "<<*cityareaptr<<" km^2"<<endl;
+          cout<<"One of the famous buildings in "<<*citynameptr<<" city of "<<*cnameptr<<" is "<<*bnameptr<<endl;
+          cout<<endl;
+      }
+};
+
+int main()
+{
+    cities c1("Pakistan",796096,"Islamabad", "Lahore", 1772);
+    c1.getInfo();
+    cities c2("America", 9833517, "Washington D.C", "Louusville",1030);
+    c2.getInfo();
+    cities c3(c1);
+    c3.getInfo();
+    cities c4(c2);
+    c4.getInfo();
+    *(c1.citynameptr) = "Karachi";
+    *(c1.cityareaptr) = 3527;
+    c1.getInfo();
+    c3.getInfo();
+    building b1("Pakistan",796096, "Islamabad","Lahore",1772,"Packages mall");
+    building b2("America",9833517,"Washington D.C","Louusville",1030, "Heyburn");
+    b1.getInfo();
+    b2.getInfo();
+
+    return 0;
+}
