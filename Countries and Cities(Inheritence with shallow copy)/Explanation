@@ -1,0 +1,177 @@
+### Code Explanation
+
+```cpp
+#include <iostream>
+using namespace std;
+```
+- The standard input-output library is included, and the `std` namespace is used for simplicity.
+
+#### Class `countries`
+```cpp
+class countries {
+public:
+    string *cnameptr;
+    double *careaptr;
+    string *capitalptr;
+    
+    countries(string name, double area, string capital) {
+        cnameptr = new string;
+        *cnameptr = name;
+        careaptr = new double;
+        *careaptr = area;
+        capitalptr = new string;
+        *capitalptr = capital;
+        cout << "Parent's parameterized constructor called" << endl;
+    }
+    
+    countries(countries &obj) {
+        cnameptr = new string;
+        this->cnameptr = obj.cnameptr; // Shallow copy of pointer
+        careaptr = new double;
+        this->careaptr = obj.careaptr; // Shallow copy of pointer
+        capitalptr = new string;
+        this->capitalptr = obj.capitalptr; // Shallow copy of pointer
+        cout << "Parent's copy constructor called" << endl;
+    }
+    
+    ~countries() {
+        cout << "Parent's destructor called" << endl;
+    }
+};
+```
+
+1. **Attributes**: This class has three pointer attributes for country name (`cnameptr`), area (`careaptr`), and capital (`capitalptr`).
+2. **Parameterized Constructor**: Allocates memory for each attribute and assigns values to each pointer.
+3. **Copy Constructor**: Performs a shallow copy by assigning pointers directly instead of copying values.
+4. **Destructor**: Outputs a message upon deletion of an object.
+
+#### Class `cities`
+```cpp
+class cities : public countries {
+public:
+    string *citynameptr;
+    double *cityareaptr;
+    
+    cities(string cname, double carea, string capital, string cityname, double cityarea) 
+    : countries(cname, carea, capital) {
+        citynameptr = new string;
+        *citynameptr = cityname;
+        cityareaptr = new double;
+        *cityareaptr = cityarea;
+        cout << "Child's parameterized constructor called" << endl;
+    }
+    
+    cities(cities &obj) : countries(obj) {
+        citynameptr = new string;
+        this->citynameptr = obj.citynameptr; // Shallow copy of pointer
+        cityareaptr = new double;
+        this->cityareaptr = obj.cityareaptr; // Shallow copy of pointer
+        cout << "Child's copy constructor called" << endl;
+    }
+    
+    ~cities() {
+        cout << "Child's destructor called" << endl;
+    }
+    
+    void getInfo() {
+        cout << "Country: " << *cnameptr << ", Area: " << *careaptr << ", Capital: " << *capitalptr << endl;
+        cout << "City: " << *citynameptr << ", Area: " << *cityareaptr << endl;
+    }
+};
+```
+
+1. **Inheritance**: `cities` inherits from `countries`.
+2. **Additional Attributes**: It includes `citynameptr` and `cityareaptr` for city details.
+3. **Constructors**: The parameterized constructor initializes attributes and calls the parent class constructor, while the copy constructor does a shallow copy.
+4. **Destructor**: Outputs a message when a `cities` object is destroyed.
+5. **`getInfo()`**: Displays country and city details.
+
+#### Class `building`
+```cpp
+class building : public cities {
+public:
+    string *bnameptr;
+    
+    building(string cname, double carea, string capital, string cityname, double cityarea, string bname) 
+    : cities(cname, carea, capital, cityname, cityarea) {
+        bnameptr = new string;
+        *bnameptr = bname;
+        cout << "Grandchild's constructor called" << endl;
+    }
+    
+    building(building &obj) : cities(obj) {
+        bnameptr = new string;
+        this->bnameptr = obj.bnameptr; // Shallow copy of pointer
+        cout << "Grandchild's copy constructor called" << endl;
+    }
+    
+    ~building() {
+        cout << "Grandchild's destructor called" << endl;
+    }
+    
+    void getInfo() {
+        cout << "Country: " << *cnameptr << ", Capital: " << *capitalptr << endl;
+        cout << "City: " << *citynameptr << ", Area: " << *cityareaptr << endl;
+        cout << "Building: " << *bnameptr << endl;
+    }
+};
+```
+
+1. **Inheritance**: Inherits from `cities`, making it a grandchild of `countries`.
+2. **Attribute**: Includes a pointer for building name (`bnameptr`).
+3. **Constructors and Destructor**: Similar structure, using shallow copy in the copy constructor.
+4. **`getInfo()`**: Displays information about the building and its location.
+
+#### `main()` Function
+```cpp
+int main() {
+    cities c1("Pakistan", 796096, "Islamabad", "Lahore", 1772);
+    c1.getInfo();
+
+    cities c3(c1); // Shallow copy example
+    c3.getInfo();
+
+    *(c1.citynameptr) = "Karachi"; // Modifying original affects copied object
+    c1.getInfo();
+    c3.getInfo(); // Shows changes due to shallow copy
+
+    building b1("Pakistan", 796096, "Islamabad", "Lahore", 1772, "Packages Mall");
+    b1.getInfo();
+
+    return 0;
+}
+```
+
+1. **Creating Objects**: Demonstrates creation of `cities` and `building` objects with the shallow copy behavior.
+2. **Shallow Copy Illustration**: After modifying `c1`, `c3` reflects changes, showing the effects of shallow copying.
+
+---
+
+### Example Output
+
+```
+Parent's parameterized constructor called
+Child's parameterized constructor called
+Country: Pakistan, Area: 796096, Capital: Islamabad
+City: Lahore, Area: 1772
+
+Parent's copy constructor called
+Child's copy constructor called
+Country: Pakistan, Area: 796096, Capital: Islamabad
+City: Lahore, Area: 1772
+
+Country: Pakistan, Area: 796096, Capital: Islamabad
+City: Karachi, Area: 3527
+
+Country: Pakistan, Area: 796096, Capital: Islamabad
+City: Karachi, Area: 3527
+
+Parent's parameterized constructor called
+Child's parameterized constructor called
+Grandchild's constructor called
+Country: Pakistan, Capital: Islamabad
+City: Lahore, Area: 1772
+Building: Packages Mall
+```
+
+This approach highlights shallow copying through class constructors, demonstrating how changes in one object affect its shallow-copied counterpart due to shared pointers. Let me know if you'd like further clarification on any part!
