@@ -1,0 +1,262 @@
+### Code Explanation
+
+```cpp
+#include <iostream>
+using namespace std;
+```
+
+- **Includes** the input-output library and uses the `std` namespace for simpler syntax.
+
+#### Class `person`
+```cpp
+class person {
+public:
+    string *nameptr;
+    int *ageptr;
+  
+    person(string name, int age) {
+        nameptr = new string;
+        *nameptr = name;
+        ageptr = new int;
+        *ageptr = age;
+        cout << "Person class parameterized constructor called" << endl;
+    }
+  
+    person(person &obj) {
+        nameptr = new string;
+        *nameptr = *obj.nameptr;  // Deep copy of `nameptr`
+        ageptr = new int;
+        *ageptr = *obj.ageptr;    // Deep copy of `ageptr`
+        cout << "Person class copy constructor called" << endl;
+    }
+  
+    ~person() {
+        delete nameptr;
+        delete ageptr;
+        cout << "Person class destructor called" << endl;
+    }
+};
+```
+
+- **Attributes**:
+  - `nameptr` and `ageptr` are pointers to store `string` and `int` values, allowing dynamic memory allocation.
+
+- **Parameterized Constructor**:
+  - Allocates memory for `nameptr` and `ageptr` and assigns the provided `name` and `age` values.
+
+- **Copy Constructor**:
+  - Performs a deep copy by allocating new memory for `nameptr` and `ageptr` and copying the values from the original object.
+
+- **Destructor**:
+  - Releases memory allocated for `nameptr` and `ageptr`.
+
+#### Class `student`
+```cpp
+class student {
+public:
+    double *rollnoptr;
+    
+    student(double rollno) {
+        rollnoptr = new double;
+        *rollnoptr = rollno;
+        cout << "Student class parameterized constructor called" << endl;
+    }
+    
+    student(student &obj) {
+        rollnoptr = new double;
+        *rollnoptr = *obj.rollnoptr;  // Deep copy
+        cout << "Student class copy constructor called" << endl;
+    }
+    
+    ~student() {
+        delete rollnoptr;
+        cout << "Student class destructor called" << endl;
+    }
+};
+```
+
+- **Attributes**:
+  - `rollnoptr` is a pointer to store a `double` representing the student's roll number.
+
+- **Constructors**:
+  - The parameterized constructor initializes `rollnoptr` with a dynamic memory allocation and assigns a roll number.
+  - The copy constructor performs a deep copy, allocating new memory for `rollnoptr` and copying the roll number.
+
+- **Destructor**:
+  - Frees memory allocated to `rollnoptr`.
+
+#### Class `teacher`
+```cpp
+class teacher {
+public:
+    double *salaryptr;
+    
+    teacher(double salary) {
+        salaryptr = new double;
+        *salaryptr = salary;
+        cout << "Teacher class parameterized constructor called" << endl;
+    }
+    
+    teacher(teacher &obj) {
+        salaryptr = new double;
+        *salaryptr = *obj.salaryptr;  // Deep copy
+        cout << "Teacher class copy constructor called" << endl;
+    }
+    
+    ~teacher() {
+        delete salaryptr;
+        cout << "Teacher class destructor called" << endl;
+    }
+};
+```
+
+- **Attributes**:
+  - `salaryptr` is a pointer to store a `double` representing the teacher's salary.
+
+- **Constructors**:
+  - The parameterized constructor initializes `salaryptr` and assigns the salary.
+  - The copy constructor performs a deep copy of `salaryptr`.
+
+- **Destructor**:
+  - Frees memory allocated to `salaryptr`.
+
+#### Class `gradstudent` (Derived from `person` and `student`)
+```cpp
+class gradstudent : public person, public student {
+public:
+    string *ResearchAreaptr;
+    
+    gradstudent(string name, int age, double rollno, string ResearchArea) 
+        : person(name, age), student(rollno) {
+        ResearchAreaptr = new string;
+        *ResearchAreaptr = ResearchArea;
+        cout << "Gradstudent class parameterized constructor called" << endl;
+    }
+    
+    gradstudent(gradstudent &obj) : person(obj), student(obj) {
+        ResearchAreaptr = new string;
+        *ResearchAreaptr = *obj.ResearchAreaptr;  // Deep copy
+        cout << "Gradstudent class copy constructor called" << endl;
+    }
+    
+    ~gradstudent() {
+        delete ResearchAreaptr;
+        cout << "Gradstudent class destructor called" << endl;
+    }
+    
+    void getInfo() {
+        cout << "Name : " << *nameptr << endl;
+        cout << "Age : " << *ageptr << " Years" << endl;
+        cout << "Roll No : " << *rollnoptr << endl;
+        cout << "Research Area : " << *ResearchAreaptr << endl;
+    }
+};
+```
+
+- **Inheritance**:
+  - Inherits from both `person` and `student`, allowing it to represent a student who is also a person.
+
+- **Attributes**:
+  - `ResearchAreaptr` is a pointer to store the research area.
+
+- **Constructors**:
+  - The parameterized constructor initializes `person` and `student` classes, allocates memory for `ResearchAreaptr`, and assigns a research area.
+  - The copy constructor performs a deep copy of `ResearchAreaptr`.
+
+- **Destructor**:
+  - Deletes `ResearchAreaptr`.
+
+- **`getInfo()` Method**:
+  - Displays information about the grad student.
+
+#### Class `TA` (Derived from `person` and `teacher`)
+```cpp
+class TA : public person, public teacher {
+public:
+    string *ResearchAreaptr;
+    
+    TA(string name, int age, double salary, string ResearchArea) 
+        : teacher(salary), person(name, age) {
+        ResearchAreaptr = new string;
+        *ResearchAreaptr = ResearchArea;
+        cout << "TA class parameterized constructor called" << endl;
+    }
+    
+    TA(TA &obj) : teacher(obj), person(obj) {
+        ResearchAreaptr = new string;
+        *ResearchAreaptr = *obj.ResearchAreaptr;  // Deep copy
+        cout << "TA class copy constructor called" << endl;
+    }
+    
+    ~TA() {
+        delete ResearchAreaptr;
+        cout << "TA class destructor called" << endl;
+    }
+    
+    void getInfo() {
+        cout << "Name : " << *nameptr << endl;
+        cout << "Age : " << *ageptr << " Years" << endl;
+        cout << "Salary : Rs." << *salaryptr << endl;
+        cout << "Research Area : " << *ResearchAreaptr << endl;
+    }
+};
+```
+
+- **Inheritance**:
+  - Inherits from both `person` and `teacher`, allowing it to represent a teacher's assistant who is also a person.
+
+- **Attributes**:
+  - `ResearchAreaptr` holds the research area.
+
+- **Constructors**:
+  - The parameterized constructor initializes `person` and `teacher`, allocates memory for `ResearchAreaptr`, and sets the research area.
+  - The copy constructor performs a deep copy of `ResearchAreaptr`.
+
+- **Destructor**:
+  - Deletes `ResearchAreaptr`.
+
+- **`getInfo()` Method**:
+  - Displays the TA’s details.
+
+#### `main()` Function
+```cpp
+int main() {
+    gradstudent g1("faseeh ur rehman", 8, 18, "Quantum Mechanics");
+    g1.getInfo();
+    
+    TA t1("Tehseen", 26, 450000, "Machine Learning");
+    t1.getInfo();
+    
+    return 0;
+}
+```
+
+1. **Creating Objects**:
+   - `g1` and `t1` are created to represent a `gradstudent` and a `TA`.
+   
+2. **Calling `getInfo()`**:
+   - Displays each object's details, demonstrating multiple inheritance and deep copying.
+
+---
+
+### Expected Output
+
+```
+Person class parameterized constructor called
+Student class parameterized constructor called
+Gradstudent class parameterized constructor called
+Name : faseeh ur rehman
+Age : 8 Years
+Roll No : 18
+Research Area : Quantum Mechanics
+
+Person class parameterized constructor called
+Teacher class parameterized constructor called
+TA class parameterized constructor called
+Name : Tehseen
+Age : 26 Years
+Salary : Rs.450000
+Research Area : Machine Learning
+```
+
+This code effectively demonstrates multiple inheritance, deep copying, and proper memory management for dynamically allocated members.
