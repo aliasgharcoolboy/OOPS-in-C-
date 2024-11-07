@@ -1,0 +1,103 @@
+#include <iostream>
+using namespace std;
+
+class person{
+    public:
+      string *nameptr;
+      int *ageptr;
+      
+      person(string name, int age){
+          nameptr = new string;
+          *nameptr = name;
+          ageptr = new int;
+          *ageptr = age;
+          cout<<"Person class parameterized constructor called"<<endl;
+      }
+      
+      person(person &obj){
+          nameptr = new string;
+          *nameptr = *obj.nameptr;
+          ageptr = new int;
+          *ageptr = *obj.ageptr;
+          cout<<"Person class copy consructor called"<<endl;
+      }
+      
+      ~person(){
+          delete nameptr;
+          delete ageptr;
+          cout<<"Person class destructor called"<<endl;
+      }
+};
+
+class Teacher : public person{
+    public:
+    double *salaryptr;
+    
+    Teacher(string name, int age, double salary) : person(name, age){
+        salaryptr = new double;
+        *salaryptr = salary;
+        cout<<"Teacher class parameterized constructor called"<<endl;
+    }
+    
+    Teacher(Teacher &obj) : person(obj){
+        salaryptr = new double;
+        *salaryptr = *obj.salaryptr;
+        cout<<"Teacher class copy constructor called"<<endl;
+    }
+    
+    ~Teacher(){
+        delete salaryptr;
+        cout<<"Teacher destructor called"<<endl;
+    }
+    
+    void getInfo(){
+        cout<<"Name : "<<*nameptr<<endl;
+        cout<<"Age : "<<*ageptr<<endl;
+        cout<<"Salary : Rs."<<*salaryptr<<endl;
+        cout<<endl;
+    }
+};
+
+class Student : public person{
+    public:
+      double *rollnoptr;
+      Student(string name, int age, double rollno) : person(name, age){
+          rollnoptr = new double;
+          *rollnoptr = rollno;
+          cout<<"Student class parameterized constructor called"<<endl;
+      }
+      
+      Student(Student &obj) : person(obj){
+          rollnoptr = new double;
+          *rollnoptr = *obj.rollnoptr;
+          cout<<"Student class copy constructor called"<<endl;
+      }
+      
+      ~Student(){
+          delete rollnoptr;
+          cout<<"Student class destructor called"<<endl;
+      }
+      
+      void getInfo(){
+          cout<<"Name : "<<*nameptr<<endl;
+          cout<<"Age : "<<*ageptr<<endl;
+          cout<<"Roll No : "<<*rollnoptr<<endl;
+      }
+};
+
+int main()
+{
+    Teacher t1("Muhammad Rehman",38,200000);
+    t1.getInfo();
+    Student s1("Usman Rlahi",18,235732);
+    s1.getInfo();
+    Teacher t2(t1);
+    t2.getInfo();
+    *(t2.nameptr) = "Shehzad Anhum";
+    *(t2.ageptr) = 55;
+    *(t2.salaryptr) = 170000;
+    t1.getInfo();
+    t2.getInfo();
+
+    return 0;
+}
