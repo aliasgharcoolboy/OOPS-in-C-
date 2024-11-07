@@ -1,0 +1,217 @@
+### Code Explanation
+
+#### `person` Class
+
+```cpp
+class person {
+public:
+    string *nameptr;
+    int *ageptr;
+    
+    person(string name, int age) {
+        nameptr = new string;
+        *nameptr = name;
+        ageptr = new int;
+        *ageptr = age;
+        cout << "Person class parameterized constructor called" << endl;
+    }
+    
+    person(person &obj) {
+        nameptr = new string;
+        *nameptr = *obj.nameptr;  // Deep copy
+        ageptr = new int;
+        *ageptr = *obj.ageptr;    // Deep copy
+        cout << "Person class copy constructor called" << endl;
+    }
+    
+    ~person() {
+        delete nameptr;
+        delete ageptr;
+        cout << "Person class destructor called" << endl;
+    }
+};
+```
+
+- **Attributes**:
+  - `nameptr` and `ageptr` are pointers to store a `string` and an `int`, enabling dynamic memory allocation.
+
+- **Parameterized Constructor**:
+  - Allocates memory for `nameptr` and `ageptr`, then assigns `name` and `age`.
+
+- **Copy Constructor**:
+  - Performs a deep copy by allocating new memory for `nameptr` and `ageptr` and copying values from the original object.
+
+- **Destructor**:
+  - Releases memory allocated for `nameptr` and `ageptr`.
+
+#### `Teacher` Class (Derived from `person`)
+
+```cpp
+class Teacher : public person {
+public:
+    double *salaryptr;
+    
+    Teacher(string name, int age, double salary) : person(name, age) {
+        salaryptr = new double;
+        *salaryptr = salary;
+        cout << "Teacher class parameterized constructor called" << endl;
+    }
+    
+    Teacher(Teacher &obj) : person(obj) {
+        salaryptr = new double;
+        *salaryptr = *obj.salaryptr;  // Deep copy
+        cout << "Teacher class copy constructor called" << endl;
+    }
+    
+    ~Teacher() {
+        delete salaryptr;
+        cout << "Teacher destructor called" << endl;
+    }
+    
+    void getInfo() {
+        cout << "Name : " << *nameptr << endl;
+        cout << "Age : " << *ageptr << endl;
+        cout << "Salary : Rs." << *salaryptr << endl;
+        cout << endl;
+    }
+};
+```
+
+- **Attributes**:
+  - `salaryptr` is a pointer to store a `double` for the teacher's salary.
+
+- **Parameterized Constructor**:
+  - Initializes the base `person` class and assigns `salary` to `salaryptr`.
+
+- **Copy Constructor**:
+  - Performs a deep copy of `salaryptr`.
+
+- **Destructor**:
+  - Releases memory allocated to `salaryptr`.
+
+- **`getInfo()` Method**:
+  - Prints the teacher’s details.
+
+#### `Student` Class (Derived from `person`)
+
+```cpp
+class Student : public person {
+public:
+    double *rollnoptr;
+    
+    Student(string name, int age, double rollno) : person(name, age) {
+        rollnoptr = new double;
+        *rollnoptr = rollno;
+        cout << "Student class parameterized constructor called" << endl;
+    }
+    
+    Student(Student &obj) : person(obj) {
+        rollnoptr = new double;
+        *rollnoptr = *obj.rollnoptr;  // Deep copy
+        cout << "Student class copy constructor called" << endl;
+    }
+    
+    ~Student() {
+        delete rollnoptr;
+        cout << "Student class destructor called" << endl;
+    }
+    
+    void getInfo() {
+        cout << "Name : " << *nameptr << endl;
+        cout << "Age : " << *ageptr << endl;
+        cout << "Roll No : " << *rollnoptr << endl;
+    }
+};
+```
+
+- **Attributes**:
+  - `rollnoptr` stores the student's roll number.
+
+- **Constructors and Destructor**:
+  - Similar to `Teacher`, but stores a roll number in `rollnoptr`.
+
+- **`getInfo()` Method**:
+  - Prints the student's details.
+
+---
+
+### `main()` Function
+
+```cpp
+int main() {
+    Teacher t1("Muhammad Rehman", 38, 200000);
+    t1.getInfo();
+
+    Student s1("Usman Rlahi", 18, 235732);
+    s1.getInfo();
+
+    Teacher t2(t1);
+    t2.getInfo();
+
+    *(t2.nameptr) = "Shehzad Anhum";
+    *(t2.ageptr) = 55;
+    *(t2.salaryptr) = 170000;
+
+    t1.getInfo();  // Show original Teacher's info
+    t2.getInfo();  // Show copied Teacher's modified info
+
+    return 0;
+}
+```
+
+1. **Create Teacher `t1`**:
+   - Calls the parameterized constructor of `Teacher`, which initializes both `person` and `salaryptr`.
+
+2. **Create Student `s1`**:
+   - Calls the parameterized constructor of `Student`, which initializes `person` and `rollnoptr`.
+
+3. **Copy Teacher `t1` to `t2`**:
+   - Invokes the copy constructor of `Teacher`, creating a deep copy of `t1`.
+
+4. **Modify `t2` Attributes**:
+   - Changes `t2`'s `nameptr`, `ageptr`, and `salaryptr` without affecting `t1`, thanks to deep copying.
+
+5. **Output**:
+   - Displays `t1` and `t2`’s information to confirm that `t2`'s modifications do not affect `t1`.
+
+### Expected Output
+
+```
+Person class parameterized constructor called
+Teacher class parameterized constructor called
+Name : Muhammad Rehman
+Age : 38
+Salary : Rs.200000
+
+Person class parameterized constructor called
+Student class parameterized constructor called
+Name : Usman Rlahi
+Age : 18
+Roll No : 235732
+
+Person class copy constructor called
+Teacher class copy constructor called
+Name : Muhammad Rehman
+Age : 38
+Salary : Rs.200000
+
+Name : Muhammad Rehman
+Age : 38
+Salary : Rs.200000
+
+Name : Shehzad Anhum
+Age : 55
+Salary : Rs.170000
+```
+
+### Analysis
+
+The code successfully demonstrates:
+
+1. **Deep Copying**:
+   - Ensures `t1` and `t2` operate independently, as modifying `t2` doesn’t affect `t1`.
+
+2. **Destructors**:
+   - Proper memory management; each destructor frees the allocated memory, avoiding memory leaks.
+
+This example shows how to manage dynamically allocated resources with deep copying, ensuring each derived object maintains its own data. 
