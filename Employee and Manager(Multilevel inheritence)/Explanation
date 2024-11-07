@@ -1,0 +1,151 @@
+### Code Explanation
+
+#### `Person` Class
+
+```cpp
+class Person {
+public:
+    string *nameptr;
+    int *ageptr;
+    
+    Person(string name, int age) {
+        nameptr = new string;
+        *nameptr = name;
+        ageptr = new int;
+        *ageptr = age;
+    }
+    
+    void getInfo() {
+        cout << "Name : " << *nameptr << endl;
+        cout << "Age : " << *ageptr << " Years " << endl;
+    }
+};
+```
+
+1. **Attributes**:
+   - `nameptr` is a pointer to a dynamically allocated `string` that stores the person's name.
+   - `ageptr` is a pointer to a dynamically allocated `int` that stores the person’s age.
+
+2. **Constructor**:
+   - `Person(string name, int age)` is a parameterized constructor that initializes `nameptr` and `ageptr` by dynamically allocating memory for each attribute and then assigning the passed values (`name` and `age`).
+   - `nameptr = new string;` allocates memory for the `nameptr` pointer.
+   - `*nameptr = name;` assigns the value of `name` to the dynamically allocated memory.
+   - `ageptr = new int;` allocates memory for the `ageptr` pointer.
+   - `*ageptr = age;` assigns the value of `age` to the dynamically allocated memory.
+
+3. **`getInfo()` Method**:
+   - `getInfo()` is a method that displays the `name` and `age` values by dereferencing `nameptr` and `ageptr`.
+
+#### `Employee` Class (Derived from `Person`)
+
+```cpp
+class Employee : public Person {
+public:
+    double *salaryptr;
+    
+    Employee(string name, int age, double salary) : Person(name, age) {
+        salaryptr = new double;
+        *salaryptr = salary;
+    }
+    
+    void getInfo() {
+        cout << "Name : " << *nameptr << endl;
+        cout << "Age : " << *ageptr << " Years " << endl;
+        cout << "Salary : Rs." << *salaryptr << endl;
+    }
+};
+```
+
+1. **Attributes**:
+   - `salaryptr` is a pointer to a dynamically allocated `double` that stores the employee's salary.
+
+2. **Constructor**:
+   - `Employee(string name, int age, double salary) : Person(name, age)` is a parameterized constructor that first calls the `Person` constructor to initialize `nameptr` and `ageptr`.
+   - Then, it allocates memory for `salaryptr` and assigns the `salary` value to it.
+
+3. **`getInfo()` Method**:
+   - This method displays the `name`, `age`, and `salary` values by dereferencing `nameptr`, `ageptr`, and `salaryptr`.
+
+#### `Manager` Class (Derived from `Employee`)
+
+```cpp
+class Manager : public Employee {
+public:
+    string *departmentptr;
+    
+    Manager(string name, int age, double salary, string department) : Employee(name, age, salary) {
+        departmentptr = new string;
+        *departmentptr = department;
+    }
+    
+    void getInfo() {
+        cout << "Name : " << *nameptr << endl;
+        cout << "Age : " << *ageptr << " Years " << endl;
+        cout << "Salary : Rs." << *salaryptr << endl;
+        cout << "Department : " << *departmentptr << endl;
+    }
+};
+```
+
+1. **Attributes**:
+   - `departmentptr` is a pointer to a dynamically allocated `string` that stores the manager’s department name.
+
+2. **Constructor**:
+   - `Manager(string name, int age, double salary, string department) : Employee(name, age, salary)` is a parameterized constructor that first calls the `Employee` constructor (which in turn calls the `Person` constructor) to initialize `nameptr`, `ageptr`, and `salaryptr`.
+   - It then allocates memory for `departmentptr` and assigns the value of `department` to it.
+
+3. **`getInfo()` Method**:
+   - This method displays the `name`, `age`, `salary`, and `department` values by dereferencing `nameptr`, `ageptr`, `salaryptr`, and `departmentptr`.
+
+---
+
+### `main()` Function
+
+```cpp
+int main() {   
+    Person p1("Shaheer Khalid", 21);
+    p1.getInfo();
+    
+    Employee e1("Shaheer Bandar", 21, 500000);
+    e1.getInfo();
+    
+    Manager m1("Shaheer Khalid", 21, 500000, "Software Engineering");
+    m1.getInfo();
+
+    return 0;
+}
+```
+
+1. **Creating a `Person` Object `p1`**:
+   - `Person p1("Shaheer Khalid", 21);` creates an object `p1` of type `Person` with the name "Shaheer Khalid" and age `21`.
+   - `p1.getInfo();` calls the `getInfo()` method to display `name` and `age`.
+
+2. **Creating an `Employee` Object `e1`**:
+   - `Employee e1("Shaheer Bandar", 21, 500000);` creates an object `e1` of type `Employee` with the name "Shaheer Bandar," age `21`, and salary `500000`.
+   - `e1.getInfo();` calls the `getInfo()` method to display `name`, `age`, and `salary`.
+
+3. **Creating a `Manager` Object `m1`**:
+   - `Manager m1("Shaheer Khalid", 21, 500000, "Software Engineering");` creates an object `m1` of type `Manager` with the name "Shaheer Khalid," age `21`, salary `500000`, and department "Software Engineering".
+   - `m1.getInfo();` calls the `getInfo()` method to display `name`, `age`, `salary`, and `department`.
+
+---
+
+### Expected Output
+
+Based on the provided sample input, the expected output would be:
+
+```
+Name : Shaheer Khalid
+Age : 21 Years 
+
+Name : Shaheer Bandar
+Age : 21 Years 
+Salary : Rs.500000
+
+Name : Shaheer Khalid
+Age : 21 Years 
+Salary : Rs.500000
+Department : Software Engineering
+```
+
+This output matches the information displayed by each `getInfo()` call for the `Person`, `Employee`, and `Manager` objects respectively. Each method displays the relevant details specific to its class and any inherited details from parent classes.
